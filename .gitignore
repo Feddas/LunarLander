@@ -1,15 +1,14 @@
-# Unity3D ignores as provided by http://t-machine.org/index.php/2012/07/03/unity-git-source-control-a-basic-gitignore/
+# These Unity3D ignores require Meta-Data to be turned on (Enable Meta files in Edit->Project Settings->Editor) http://docs.unity3d.com/Documentation/Manual/ExternalVersionControlSystemSupport.html
 *.userprefs
 *.pidb
 *.unityproj
 .DS_Store
-/Library/FailedAssetImports.txt
-/Library/cache/
-/Library/previews/
-/Library/ScriptAssemblies/
+/Library/
 /[Oo]bj/
 /[Tt]emp/
 
 # VisualStudio specific files
 *.sln
 *.csproj
+
+# Version control of Unity3D asset files require enabling "Force Text" of pro version
