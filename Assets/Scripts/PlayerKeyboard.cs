@@ -8,19 +8,18 @@ public class PlayerKeyboard : MonoBehaviour {
 	
 	public GameObject[] shipExplosions;
 	
+	public GuiInGame Gui;
+	
 	// Use this for initialization
-	void Start () {
+	void Start ()
+	{
 		Globals.BottomThruster = bottomThruster;
 		Globals.LeftThruster = leftThruster;
 		Globals.RightThruster = rightThruster;
 		Globals.PlayerShip = rigidbody;
-	}
-	
-	/// <summary> Tests the explosion. StartCoroutine(testExplosion()); </summary>
-	private IEnumerator testExplosion()
-	{
-		yield return new WaitForSeconds(1);
-		explode();
+		
+		//Automatically populate the Gui variable with the Gui script attached to the EmptyObject Gui using its Gui Tag
+		Gui = GameObject.FindWithTag("Gui").GetComponent(typeof(GuiInGame)) as GuiInGame;
 	}
 	
 	// Update is called once per frame
@@ -83,5 +82,7 @@ public class PlayerKeyboard : MonoBehaviour {
 		int ndxExplosion = Random.Range(0,shipExplosions.Length);
 		Instantiate(shipExplosions[ndxExplosion], transform.position, transform.rotation);
 		Destroy(gameObject);
+		
+		Gui.Lose();
 	}
 }

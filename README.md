@@ -5,7 +5,7 @@ Unity3D implementation of the game Lunar Lander. Roughly based off the tutorial 
 
 TODO
 ----
-Still need to follow this video and on: http://cgcookie.com/unity/2012/03/30/lunar-lander-05-gui-menus/
+Still need to follow this video and on: http://cgcookie.com/unity/2012/04/11/lunar-lander-06-final-audio-score-and-more-gui/
 Add Mini-map
 
 Source Control
