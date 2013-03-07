@@ -10,6 +10,10 @@ public class PlayerKeyboard : MonoBehaviour {
 	
 	// Use this for initialization
 	void Start () {
+		Globals.BottomThruster = bottomThruster;
+		Globals.LeftThruster = leftThruster;
+		Globals.RightThruster = rightThruster;
+		Globals.PlayerShip = rigidbody;
 	}
 	
 	/// <summary> Tests the explosion. StartCoroutine(testExplosion()); </summary>
