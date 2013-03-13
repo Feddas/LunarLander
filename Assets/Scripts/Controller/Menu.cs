@@ -48,8 +48,8 @@ public class Menu {
 	{
         float width = 200;
         float height = 60;
-        float left = Screen.width / 2 - width / 2;
-        float top = Screen.height / 2 - height / 2;
+        float left = Screen.width / 2 - (width / 2);
+        float top = Screen.height / 2 - (1.5f * height);
 		if(GUI.Button(new Rect(left, top, width, height), firstButton))
 		{
 			guiMode = "InGame";
@@ -65,6 +65,12 @@ public class Menu {
 				if (secondButtonAction != null)
 					secondButtonAction();
 			}
+		}
+		
+		top += 2*height;
+		if(GUI.Button(new Rect(left, top, width, height), "Quit"))
+		{
+			Application.Quit();
 		}
 	}
 }
