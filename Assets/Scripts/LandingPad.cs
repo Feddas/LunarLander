@@ -22,10 +22,13 @@ public class LandingPad : MonoBehaviour {
 	
 	public void Activate()
 	{
-		print (gameObject.name + " has been activated");
-		renderer.material = onMaterial;
-		stationLight.color = onColor;
+		if (stationLight.color != onColor)
+		{
+			print (gameObject.name + " has been activated");
+			renderer.material = onMaterial;
+			stationLight.color = onColor;
 		
-		Gui.LandingPadActivated();
+			Gui.LandingPadActivated();
+		}
 	}
 }

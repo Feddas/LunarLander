@@ -1,8 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class PlayerTouch : MonoBehaviour {	
-    //file:///C:/Apps/Unity/Editor/Data/Documentation/Documentation/Components/gui-Layout.html
+public class PlayerTouch : MonoBehaviour {
     /// <summary> default to the bottom third of the screen </summary>
     public PlayerMoveEnum choice = PlayerMoveEnum.Undetermined;
 	

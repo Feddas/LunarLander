@@ -2,22 +2,21 @@ using UnityEngine;
 using System.Collections;
 using System;
 
-[ExecuteInEditMode]
+//[ExecuteInEditMode]
 public class GuiMainMenu : MonoBehaviour {
-	void OnGUI ()
+	public void OnClickNewGame()
 	{
-		Action firstButtonAction = () =>
-		{
-			PlayerPrefs.SetInt("PlayerLevel", 1);
-			Application.LoadLevel(1);
-		};
-		Action secondButtonAction = () =>
-		{
-			Application.LoadLevel(PlayerPrefs.GetInt("PlayerLevel"));
-		};
-		
-		(new Menu()).BuildMainMenu(
-			"New Game", firstButtonAction,
-			"Continue Game", secondButtonAction);
+		PlayerPrefs.SetInt("PlayerLevel", 1);
+		Application.LoadLevel(1);
+	}
+	
+	public void OnClickContinue()
+	{
+		Application.LoadLevel(PlayerPrefs.GetInt("PlayerLevel"));
+	}
+	
+	public void OnClickQuit()
+	{
+		Application.Quit();
 	}
 }

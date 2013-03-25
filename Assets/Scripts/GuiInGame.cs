@@ -3,8 +3,12 @@ using System.Collections;
 using System;
 
 public class GuiInGame : MonoBehaviour {
-	private string guiMode = "InGame";
-	private int numActivated, totalLandingPads;
+    public GameObject nguiControls;
+    public GameObject nguiMenu;
+    public GameObject nguiMenuTopButton;
+    private string guiMode = "InGame";
+	private int numActivated, totalLandingPads = 2;
+	private bool isMenuDisplayed = false;
 		
 	void Update () {
 		if (Input.GetKeyDown("escape"))
@@ -16,20 +20,62 @@ public class GuiInGame : MonoBehaviour {
 	
 	void OnGUI ()
 	{
-		Menu menu = new Menu();
-		if (guiMode == "Paused")
+		if (isMenuDisplayed == false)
 		{
-			menu.BuildMenu(ref guiMode, "Resume Game");
+			if (guiMode == "Paused")
+			{
+				displayGui(nguiMenu);
+				changeTopButton("Resume Game", "OnClickResume");
+			}
+			else if (guiMode == "Win")
+			{
+				displayGui(nguiMenu);
+				changeTopButton("Next Level", "OnClickNextLevel");
+			}
+			else if (guiMode == "Lose")
+			{
+				displayGui(nguiMenu);
+				changeTopButton("Retry Level", "OnClickRetry");
+			}
 		}
-		if (guiMode == "Win")
+		else if (guiMode == "InGame")
 		{
-			menu.BuildMenu(ref guiMode, "Next Level", () => Application.LoadLevel(Application.loadedLevel+1));
-		}
-		if (guiMode == "Lose")
-		{
-			menu.BuildMenu(ref guiMode, "Retry Level", () => Application.LoadLevel(Application.loadedLevel));
+			displayGui(nguiControls);
 		}
 	}
+	
+	#region [ Button events ]
+	public void OnClickResume()
+	{
+		Time.timeScale = 1;
+		guiMode = "InGame";
+	}
+	
+	public void OnClickNextLevel()
+	{
+		Time.timeScale = 1;
+		guiMode = "InGame";
+		Application.LoadLevel(Application.loadedLevel+1);
+	}
+	
+	public void OnClickRetry()
+	{
+		Time.timeScale = 1;
+		guiMode = "InGame";
+		Application.LoadLevel(Application.loadedLevel);
+	}
+	
+	public void OnClickMainMenu()
+	{
+		Time.timeScale = 1;
+		Application.LoadLevel(0);
+	}
+	
+	public void OnClickQuit()
+	{
+		Application.Quit();
+	}
+	#endregion [ Button events ]
 	
 	public void LandingPadActivated()
 	{
@@ -41,7 +87,7 @@ public class GuiInGame : MonoBehaviour {
 		print ("LZ activated");
 	}
 	
-	void Win()
+	private void Win()
 	{
 		Time.timeScale = 0;
 		guiMode = "Win";
@@ -50,6 +96,7 @@ public class GuiInGame : MonoBehaviour {
 	
 	public void Lose()
 	{
+		numActivated = 0;
 		Action afterExplosion = () => 
 		{
 			Time.timeScale = 0;
@@ -63,5 +110,36 @@ public class GuiInGame : MonoBehaviour {
 	{
 		yield return new WaitForSeconds(3);
 		afterExplosion();
+	}
+	
+	private void displayGui(GameObject primary)
+	{
+		if (primary == nguiMenu)
+		{
+			NGUITools.SetActive(nguiMenu,true);
+			
+			//SetActive() line below causes exception "!IsActive () && !m_RunInEditMode"
+			//NGUITools.SetActive(nguiControls,false);
+			
+			isMenuDisplayed = true;
+		}
+		else
+		{
+			NGUITools.SetActive(nguiMenu,false);
+			
+			//deactivated this line due to "!IsActive () && !m_RunInEditMode" error above
+			//NGUITools.SetActive(nguiControls,true);
+			
+			isMenuDisplayed = false;
+		}
+	}
+	
+	private void changeTopButton(string text, string actionName)
+	{
+		UIButtonMessage topButton = nguiMenuTopButton.GetComponent("UIButtonMessage") as UIButtonMessage;
+		topButton.functionName = actionName;
+		
+		UILabel label = nguiMenuTopButton.GetComponentInChildren(typeof(UILabel)) as UILabel;
+		label.text = text;
 	}
 }

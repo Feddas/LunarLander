@@ -61,7 +61,7 @@ public class PlayerKeyboard : MonoBehaviour {
 	private void OnCollisionEnter(Collision hitInfo)
 	{
 		print(hitInfo.relativeVelocity.magnitude);
-		if(hitInfo.relativeVelocity.magnitude > 2)
+		if(hitInfo.relativeVelocity.magnitude > 4)
 		{
 			explode();
 		}
@@ -71,7 +71,7 @@ public class PlayerKeyboard : MonoBehaviour {
 			landingPad = hitInfo.gameObject.GetComponent("LandingPad") as LandingPad;
 			landingPad.Activate();
 		}
-		else if(hitInfo.relativeVelocity.magnitude > 1)
+		else if(hitInfo.relativeVelocity.magnitude > 2)
 		{
 			explode();
 		}
