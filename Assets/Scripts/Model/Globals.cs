@@ -7,4 +7,6 @@ public class Globals {
 	public static ParticleSystem LeftThruster { get; set; }
 	public static ParticleSystem RightThruster { get; set; }
 	public static Rigidbody PlayerShip { get; set; }
+	//public static Transform ShipTransform { get; set; }
+	public static bool IsSoundOn { get; set; }
 }

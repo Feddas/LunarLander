@@ -12,7 +12,7 @@ public class Thrusters {
 	{
 	}
 	
-	public Vector3 DoThrust(PlayerMoveEnum direction)
+	public Vector3 ThrustOn(PlayerMoveEnum direction)
 	{
 		float sideThrust = 600 * Time.deltaTime;
 		float bottomThrust = 2000 * Time.deltaTime;

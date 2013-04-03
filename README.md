@@ -19,5 +19,6 @@ Assets used
 
 What to dev next
 ----------------
-Still need to follow this video and on: http://cgcookie.com/unity/2012/04/11/lunar-lander-06-final-audio-score-and-more-gui/
-Add Mini-map
+- Sounds have been added. Now, about 23:50 into the 6th video. Which is where the work for scoring still needs to be done: http://cgcookie.com/unity/2012/04/11/lunar-lander-06-final-audio-score-and-more-gui/
+- Fix toggle sounds on the main menu
+- Add in-game Mini-map

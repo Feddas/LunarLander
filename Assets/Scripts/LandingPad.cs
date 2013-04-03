@@ -22,6 +22,9 @@ public class LandingPad : MonoBehaviour {
 	
 	public void Activate()
 	{
+		if (Globals.IsSoundOn)
+			audio.Play();
+		
 		if (stationLight.color != onColor)
 		{
 			print (gameObject.name + " has been activated");

@@ -6,10 +6,27 @@ public class GuiInGame : MonoBehaviour {
     public GameObject nguiControls;
     public GameObject nguiMenu;
     public GameObject nguiMenuTopButton;
+    public GameObject nguiMenuSoundButton;
+	public AudioClip WinClip;
+	public AudioClip LoseClip;
     private string guiMode = "InGame";
-	private int numActivated, totalLandingPads = 2;
+	private int numActivated, totalLandingPads;
 	private bool isMenuDisplayed = false;
-		
+	
+	private string toggleSoundLabel
+	{
+		get
+		{
+			return "Turn Sound " + (Globals.IsSoundOn ? "Off" : "On");
+		}
+	}
+	
+	void Start ()
+	{
+		totalLandingPads = (GameObject.FindGameObjectsWithTag("LandingPad") as GameObject[]).Length;
+		toggleSound();
+	}
+	
 	void Update () {
 		if (Input.GetKeyDown("escape"))
 		{
@@ -20,22 +37,21 @@ public class GuiInGame : MonoBehaviour {
 	
 	void OnGUI ()
 	{
-		if (isMenuDisplayed == false)
+		if (isMenuDisplayed == false && guiMode != "InGame")
 		{
+			displayGui(nguiMenu);
+			changeButton(nguiMenuSoundButton, toggleSoundLabel);
 			if (guiMode == "Paused")
 			{
-				displayGui(nguiMenu);
-				changeTopButton("Resume Game", "OnClickResume");
+				changeButton(nguiMenuTopButton, "Resume Game", "OnClickResume");
 			}
 			else if (guiMode == "Win")
 			{
-				displayGui(nguiMenu);
-				changeTopButton("Next Level", "OnClickNextLevel");
+				changeButton(nguiMenuTopButton, "Next Level", "OnClickNextLevel");
 			}
 			else if (guiMode == "Lose")
 			{
-				displayGui(nguiMenu);
-				changeTopButton("Retry Level", "OnClickRetry");
+				changeButton(nguiMenuTopButton, "Retry Level", "OnClickRetry");
 			}
 		}
 		else if (guiMode == "InGame")
@@ -65,6 +81,13 @@ public class GuiInGame : MonoBehaviour {
 		Application.LoadLevel(Application.loadedLevel);
 	}
 	
+	public void OnClickToggleSound()
+	{
+		Globals.IsSoundOn = !Globals.IsSoundOn;
+		changeButton(nguiMenuSoundButton, toggleSoundLabel);
+		toggleSound();
+	}
+	
 	public void OnClickMainMenu()
 	{
 		Time.timeScale = 1;
@@ -89,6 +112,11 @@ public class GuiInGame : MonoBehaviour {
 	
 	private void Win()
 	{
+		if (Globals.IsSoundOn)
+		{
+			audio.clip = WinClip;
+			audio.Play();
+		}
 		Time.timeScale = 0;
 		guiMode = "Win";
 		PlayerPrefs.SetInt("PlayerLevel",Application.loadedLevel+1);
@@ -99,6 +127,11 @@ public class GuiInGame : MonoBehaviour {
 		numActivated = 0;
 		Action afterExplosion = () => 
 		{
+			if (Globals.IsSoundOn)
+			{
+				audio.clip = LoseClip;
+				audio.Play();
+			}
 			Time.timeScale = 0;
 			guiMode = "Lose";
 		};
@@ -134,12 +167,35 @@ public class GuiInGame : MonoBehaviour {
 		}
 	}
 	
-	private void changeTopButton(string text, string actionName)
+	private void changeButton(GameObject button, string text, string actionName = null)
 	{
-		UIButtonMessage topButton = nguiMenuTopButton.GetComponent("UIButtonMessage") as UIButtonMessage;
-		topButton.functionName = actionName;
-		
-		UILabel label = nguiMenuTopButton.GetComponentInChildren(typeof(UILabel)) as UILabel;
+		UILabel label = button.GetComponentInChildren(typeof(UILabel)) as UILabel;
 		label.text = text;
+		
+		if (actionName != null)
+		{
+			UIButtonMessage buttonMessage = button.GetComponent("UIButtonMessage") as UIButtonMessage;
+			buttonMessage.functionName = actionName;
+		}
+	}
+	
+	private void toggleSound()
+	{
+		bool isSoundOn = Globals.IsSoundOn;
+				
+		//toggle thruster sounds
+		var buttonsWithSound = nguiControls.transform.GetComponentsInChildren<UIButtonSound>();
+		foreach (UIButtonSound buttonSound in buttonsWithSound) {
+			buttonSound.enabled = isSoundOn;
+		}
+		
+		//toggle explosion sounds
+//		var explosions = Globals.PlayerShip.GetComponent<PlayerKeyboard>().shipExplosions;
+//		foreach (GameObject explosion in explosions) {
+//			var sound = explosion.GetComponent<DetonatorSound>();
+//			sound.on = isSoundOn;
+//			sound.maxVolume = 0; //isSoundOn ? 1 : 
+//			sound.enabled = isSoundOn;
+//		}
 	}
 }

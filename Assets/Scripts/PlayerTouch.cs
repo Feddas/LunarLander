@@ -33,8 +33,9 @@ public class PlayerTouch : MonoBehaviour {
 				ThrusterLeft = Globals.LeftThruster,
 				ThrusterRight = Globals.RightThruster,
 			};
-			Globals.PlayerShip.AddForce(thrusters.DoThrust(choice));
-            print(choice.ToString() + " fire #" + count++);
+			Vector3 shipForce = thrusters.ThrustOn(choice);
+			Globals.PlayerShip.AddForce(shipForce);
+            //print(choice.ToString() + " fire #" + count++);
 		}
 	}
 }
