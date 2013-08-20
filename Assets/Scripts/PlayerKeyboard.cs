@@ -6,12 +6,11 @@ public class PlayerKeyboard : MonoBehaviour {
 	public ParticleSystem leftThruster;
 	public ParticleSystem rightThruster;
 	public AudioClip SoundExplosion;
+	
 	public GameObject[] shipExplosions;
+	
 	public GuiInGame Gui;
 	
-	private Thrusters thrusters;
-	
-	#region [ Overriden functions ]
 	/// <summary>
 	/// Awake() runs before Start() allowing the Globals to be referenced in Start()
 	/// which happens in GuiInGame.start().toggleSound()
@@ -26,19 +25,67 @@ public class PlayerKeyboard : MonoBehaviour {
 		//Globals.ShipTransform = transform;
 	}
 	
+	// Use this for initialization
 	void Start ()
 	{
-		thrusters = new Thrusters();
-		
 		//Automatically populate the Gui variable with the Gui script attached to the EmptyObject Gui using its Gui Tag
 		Gui = GameObject.FindWithTag("Gui").GetComponent(typeof(GuiInGame)) as GuiInGame;
 	}
 	
+	// Update is called once per frame
 	private void Update ()
 	{
-		thrusters.ThrustShipOn(determineDirection());
+	    if(Input.GetAxis("Horizontal") > 0) //right
+		{
+			leftThruster.Emit(1);
+			rightThruster.Emit(0);
+			rigidbody.AddForce(10,0,0);
+		}
+	    if(Input.GetAxis("Horizontal") < 0) //left
+		{
+			rightThruster.Emit(1);
+			leftThruster.Emit(0);
+			rigidbody.AddForce(-10,0,0);
+		}
+	    if(Input.GetAxis("Horizontal") == 0)
+		{
+			leftThruster.Emit(0);
+			rightThruster.Emit(0);
+		}
 		
-		handleAudio();
+	    if(Input.GetAxis("Vertical") > 0) //up
+		{
+			bottomThruster.Emit(1);
+			rigidbody.AddForce(0,30,0);
+		}
+	    if(Input.GetAxis("Vertical") < 0) //down
+		{
+			rigidbody.AddForce(0,-10,0);
+		}
+	    if(Input.GetAxis("Vertical") == 0)
+		{
+			bottomThruster.Emit(0);
+		}
+		
+		HandleAudio();
+	}
+	
+	public void HandleAudio(bool playAudio = false)
+	{
+		if (Globals.IsSoundOn == false)
+			return;
+		
+		if (Input.GetAxis("Vertical") != 0 || Input.GetAxis("Horizontal") != 0 || playAudio)
+		{
+			if(audio.isPlaying == false)
+			{
+				audio.Play();
+			}
+		}
+		else if(audio.isPlaying)
+		{
+			audio.Stop();
+		}
 	}
 	
 	private void OnCollisionEnter(Collision hitInfo)
@@ -59,66 +106,10 @@ public class PlayerKeyboard : MonoBehaviour {
 			explode();
 		}
 	}
-	#endregion [ Overriden functions ]
-	
-	#region [ private functions ]
-	private PlayerMoveEnum determineDirection()
-	{
-		PlayerMoveEnum choice;
-		
-	    if(Input.GetAxis("Horizontal") > 0) //right
-		{
-			choice = PlayerMoveEnum.LeftThruster;
-		}
-	    else if(Input.GetAxis("Horizontal") < 0) //left
-		{
-			choice = PlayerMoveEnum.RightThruster;
-		}
-	    else
-		{
-			choice = PlayerMoveEnum.Undetermined;
-		}
-		
-	    if(Input.GetAxis("Vertical") > 0) //up
-		{
-			switch (choice)
-			{
-			case PlayerMoveEnum.RightThruster:
-				choice = PlayerMoveEnum.RightBottomThruster;
-				break;
-			case PlayerMoveEnum.LeftThruster:
-				choice = PlayerMoveEnum.LeftBottomThruster;
-				break;
-			default:
-				choice = PlayerMoveEnum.BottomThruster;
-				break;
-			}
-		}
-		
-		return choice;
-	}
-	
-	private void handleAudio(bool playAudio = false)
-	{
-		if (Globals.HasSetting(Setting.IsSoundOn) == false)
-			return;
-		
-		if (Input.GetAxis("Vertical") != 0 || Input.GetAxis("Horizontal") != 0 || playAudio)
-		{
-			if(audio.isPlaying == false)
-			{
-				audio.Play();
-			}
-		}
-		else if(audio.isPlaying)
-		{
-			audio.Stop();
-		}
-	}
 	
 	private void explode()
 	{
-		if (Globals.HasSetting(Setting.IsSoundOn))
+		if (Globals.IsSoundOn)
 			AudioSource.PlayClipAtPoint(SoundExplosion, new Vector3(0,0));
 		
 		int ndxExplosion = Random.Range(0,shipExplosions.Length);
@@ -127,5 +118,4 @@ public class PlayerKeyboard : MonoBehaviour {
 		
 		Gui.Lose();
 	}
-	#endregion [ private functions ]
 }

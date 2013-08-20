@@ -7,7 +7,7 @@ Unity3D implementation of the game Lunar Lander. Roughly based off the tutorial 
 
 Building the source code
 ------------
-- Open Level1.unity with the free version of Unity 3D v3.5.7, which can be downloaded at http://unity3d.com/unity/download/archive
+- Open Level1.unity with the free version of Unity 3D v4.x. Get the latest version of Unity 3D v4.x at http://unity3d.com/unity/download/archive
 
 How to play
 -----------
