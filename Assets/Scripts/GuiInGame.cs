@@ -12,6 +12,9 @@ public class GuiInGame : MonoBehaviour {
     public GameObject nguiMenuSoundButton;
 	public AudioClip WinClip;
 	public AudioClip LoseClip;
+	public UILabel ScoreLevel;
+	public UILabel ScoreTotal;
+	
     private string guiMode = "InGame";
 	private bool isMenuDisplayed = false;
 	
@@ -101,7 +104,12 @@ public class GuiInGame : MonoBehaviour {
 	}
 	#endregion [ Button events ]
 	
-	public void Win()
+	public void UpdateScore(int levelScore)
+	{
+		ScoreLevel.text = "Level Score:" + levelScore;
+	}
+	
+	public void Win(int levelScore)
 	{
 		if (Globals.IsSoundOn)
 		{
@@ -110,7 +118,20 @@ public class GuiInGame : MonoBehaviour {
 		}
 		Time.timeScale = 0;
 		guiMode = "Win";
-		PlayerPrefs.SetInt("PlayerLevel",Application.loadedLevel+1);
+		PlayerPrefs.SetInt(PlayerPrefKey.Level, Application.loadedLevel+1);
+		int totalScore = levelScore;
+		if (PlayerPrefs.HasKey(PlayerPrefKey.TotalScore))
+		{
+			totalScore = PlayerPrefs.GetInt(PlayerPrefKey.TotalScore) + levelScore;
+			PlayerPrefs.SetInt(PlayerPrefKey.TotalScore, totalScore);
+		}
+		else
+		{
+			PlayerPrefs.SetInt(PlayerPrefKey.TotalScore, totalScore);
+		}
+		PlayerPrefs.Save();
+		
+		ScoreTotal.text = "Total Score:" + totalScore;
 	}
 	
 	public void Lose()

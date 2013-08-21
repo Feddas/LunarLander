@@ -19,6 +19,12 @@ Assets used
 
 What to dev next
 ----------------
-- Sounds have been added. Now, about 23:50 into the 6th video. Which is where the work for scoring still needs to be done: http://cgcookie.com/unity/2012/04/11/lunar-lander-06-final-audio-score-and-more-gui/
+- Added everything in the cgCookie LunarLander series except the final 7th video: http://cgcookie.com/unity/lessons/7-bonus-fuel-meter-music-and-persistant-data-camera-follow/
 - Fix toggle sounds on the main menu
 - Add in-game Mini-map
+
+
+Tips from this cgCookie series
+------------------------------
+video 6:
+- dafont.com - free fonts

@@ -9,13 +9,14 @@ using System;
 public class GuiMainMenu : MonoBehaviour {
 	public void OnClickNewGame()
 	{
-		PlayerPrefs.SetInt("PlayerLevel", 1);
+		PlayerPrefs.DeleteAll();
+		PlayerPrefs.SetInt(PlayerPrefKey.Level, 1);
 		Application.LoadLevel(1);
 	}
 	
 	public void OnClickContinue()
 	{
-		Application.LoadLevel(PlayerPrefs.GetInt("PlayerLevel"));
+		Application.LoadLevel(PlayerPrefs.GetInt(PlayerPrefKey.Level));
 	}
 	
 	public void OnClickQuit()

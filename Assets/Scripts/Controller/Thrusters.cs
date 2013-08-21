@@ -1,6 +1,16 @@
 using UnityEngine;
 using System.Collections;
 
+public enum PlayerMoveEnum
+{
+	Undetermined = 0,
+	LeftThruster,
+	RightThruster,
+	BottomThruster,
+	LeftBottomThruster,
+	RightBottomThruster,
+}
+
 public class Thrusters {
 	public ParticleSystem ThrusterBottom { get; set; }
 	public ParticleSystem ThrusterLeft { get; set; }
@@ -10,6 +20,17 @@ public class Thrusters {
 	
 	public Thrusters()
 	{
+	}
+	
+	public static bool OfShipInitialized
+	{
+		get
+		{
+			return Globals.PlayerShip != null
+				&& Globals.BottomThruster != null
+				&& Globals.LeftThruster != null
+				&& Globals.RightThruster != null;
+		}
 	}
 	
 	public Vector3 ThrustOn(PlayerMoveEnum direction)

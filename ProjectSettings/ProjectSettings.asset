@@ -36,6 +36,7 @@ PlayerSettings:
   runInBackground: 0
   captureSingleScreen: 0
   Override IPod Music: 0
+  enableHWStatistics: 1
   usePlayerLog: 1
   stripPhysics: 0
   resizableWindow: 0
@@ -47,6 +48,7 @@ PlayerSettings:
   xboxEnableFitness: 0
   macFullscreenMode: 2
   xboxSpeechDB: 0
+  xboxEnableHeadOrientation: 0
   wiiHio2Usage: -1
   wiiLoadingScreenRectPlacement: 0
   wiiLoadingScreenBackground: {r: 1, g: 1, b: 1, a: 1}
@@ -97,7 +99,11 @@ PlayerSettings:
   AndroidKeystoreName: 
   AndroidKeyaliasName: 
   resolutionDialogBanner: {fileID: 0}
-  m_BuildTargetIcons: []
+  m_BuildTargetIcons:
+  - m_BuildTarget: 
+    m_Icons:
+    - m_Icon: {fileID: 0}
+      m_Size: 128
   m_BuildTargetBatching: []
   webPlayerTemplate: APPLICATION:Default
   m_TemplateCustomTags: {}
@@ -112,8 +118,6 @@ PlayerSettings:
   wiiControllerCount: 1
   wiiFloatingPointExceptions: 0
   wiiScreenCrashDumps: 1
-  wiiMemoryLabelCount: 155
-  wiiMemorySetup: 5effbee7ffffffafbb1f00000000000000000000
   XboxTitleId: 
   XboxImageXexPath: 
   XboxSpaPath: 
@@ -122,6 +126,8 @@ PlayerSettings:
   XboxSplashScreen: {fileID: 0}
   xboxEnableSpeech: 0
   xboxAdditionalTitleMemorySize: 0
+  xboxDeployKinectHeadOrientation: 0
+  xboxDeployKinectHeadPosition: 0
   ps3TitleConfigPath: 
   ps3DLCConfigPath: 
   ps3ThumbnailPath: 
@@ -148,12 +154,14 @@ PlayerSettings:
   metroTileWideLogo: 
   metroTileSmallLogo: 
   metroTileShortName: 
+  metroCommandLineArgsFile: 
   metroTileShowName: 0
   metroTileForegroundText: 1
   metroTileBackgroundColor: {r: 0, g: 0, b: 0, a: 1}
   metroSplashScreenImage: 
   metroSplashScreenBackgroundColor: {r: 0, g: 0, b: 0, a: 1}
   metroSplashScreenUseBackgroundColor: 0
+  metroCapabilities: {}
   firstStreamedLevelWithResources: 0
   unityRebuildLibraryVersion: 9
   unityForwardCompatibleVersion: 37

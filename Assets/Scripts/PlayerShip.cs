@@ -48,12 +48,12 @@ public class PlayerShip : MonoBehaviour
 		HandleAudio();
 	}
 	
-	public void HandleAudio(bool playAudio = false)
+	public void HandleAudio()
 	{
 		if (Globals.IsSoundOn == false)
 			return;
 		
-		if (Input.GetAxis("Vertical") != 0 || Input.GetAxis("Horizontal") != 0 || playAudio)
+		if (Input.GetAxis("Vertical") != 0 || Input.GetAxis("Horizontal") != 0)
 		{
 			if(audio.isPlaying == false)
 			{
@@ -105,9 +105,10 @@ public class PlayerShip : MonoBehaviour
 	public void LandingPadActivated()
 	{
 		numActivated++;
+		Gui.UpdateScore(numActivated);
 		if (numActivated == totalLandingPads)
 		{
-			Gui.Win();
+			Gui.Win(numActivated);
 		}
 	}
 	#endregion [ Win ]

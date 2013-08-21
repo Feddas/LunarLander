@@ -7,49 +7,42 @@ using System.Collections;
 /// </summary>
 public class PlayerKeyboard : MonoBehaviour
 {
-	private ParticleSystem bottomThruster;
-	private ParticleSystem leftThruster;
-	private ParticleSystem rightThruster;
-	
-	void Start ()
+	private void Start ()
 	{
-		bottomThruster = Globals.BottomThruster;
-		leftThruster = Globals.LeftThruster;
-		rightThruster = Globals.RightThruster;
 	}
 	
 	private void Update ()
 	{
-	    if(Input.GetAxis("Horizontal") > 0) //right
+		bool isPressed = Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0;
+		if (isPressed && Thrusters.OfShipInitialized)
 		{
-			leftThruster.Emit(1);
-			rightThruster.Emit(0);
-			rigidbody.AddForce(10,0,0);
-		}
-	    if(Input.GetAxis("Horizontal") < 0) //left
-		{
-			rightThruster.Emit(1);
-			leftThruster.Emit(0);
-			rigidbody.AddForce(-10,0,0);
-		}
-	    if(Input.GetAxis("Horizontal") == 0)
-		{
-			leftThruster.Emit(0);
-			rightThruster.Emit(0);
-		}
-		
-	    if(Input.GetAxis("Vertical") > 0) //up
-		{
-			bottomThruster.Emit(1);
-			rigidbody.AddForce(0,30,0);
-		}
-	    if(Input.GetAxis("Vertical") < 0) //down
-		{
-			rigidbody.AddForce(0,-10,0);
-		}
-	    if(Input.GetAxis("Vertical") == 0)
-		{
-			bottomThruster.Emit(0);
+			//determine how to move the ship
+			PlayerMoveEnum choice = PlayerMoveEnum.Undetermined;
+			if (Input.GetAxis("Horizontal") > 0) //right
+			{
+				choice = PlayerMoveEnum.LeftThruster;
+			}
+			else if (Input.GetAxis("Horizontal") < 0) //left
+			{
+				choice = PlayerMoveEnum.RightThruster;
+			}
+			if (Input.GetAxis("Vertical") > 0) //up
+			{
+				//retain horizontal movement in choice
+				choice = (PlayerMoveEnum)((int)PlayerMoveEnum.BottomThruster + (int)choice);
+			}
+			
+			//determine how much to move in choice direction
+			Thrusters thrusters = new Thrusters()
+			{
+				ThrusterBottom = Globals.BottomThruster,
+				ThrusterLeft = Globals.LeftThruster,
+				ThrusterRight = Globals.RightThruster,
+			};
+			Vector3 shipForce = thrusters.ThrustOn(choice);
+			
+			//move the ship
+			Globals.PlayerShip.AddForce(shipForce);
 		}
 	}
 }

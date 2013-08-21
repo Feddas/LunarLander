@@ -11,11 +11,7 @@ public class PlayerTouch : MonoBehaviour
 	/// </summary>
     public PlayerMoveEnum choice = PlayerMoveEnum.Undetermined;
 	
-    private void OnGUI()
-    {
-    }
-	
-	bool isPressed;
+	private bool isPressed;
 	
 	/// <summary>
 	/// This method is called by NGUI's UIButton.cs click event handler.
@@ -27,13 +23,9 @@ public class PlayerTouch : MonoBehaviour
 	
 	void Update()
 	{
-		if (isPressed
-		    && Globals.BottomThruster != null
-			&& Globals.LeftThruster != null
-			&& Globals.RightThruster != null
-			&& Globals.PlayerShip != null)
+		if (isPressed && Thrusters.OfShipInitialized)
 		{
-			//determine how to move the ship
+			//determine how much to move in choice direction
 			Thrusters thrusters = new Thrusters()
 			{
 				ThrusterBottom = Globals.BottomThruster,
@@ -46,14 +38,4 @@ public class PlayerTouch : MonoBehaviour
 			Globals.PlayerShip.AddForce(shipForce);
 		}
 	}
-}
-
-public enum PlayerMoveEnum
-{
-	Undetermined,
-	LeftThruster,
-	RightThruster,
-	LeftBottomThruster,
-	BottomThruster,
-	RightBottomThruster,
 }
