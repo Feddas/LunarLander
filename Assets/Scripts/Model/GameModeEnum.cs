@@ -1,7 +1,9 @@
 using UnityEngine;
 using System.Collections;
 
-public enum GameModeEnum {
+//Refactor: use gamemode system deployed to sinasprite
+public enum GameModeEnum
+{
 	Undefined,
 	InGame,
 	Paused,

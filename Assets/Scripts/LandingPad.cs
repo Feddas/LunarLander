@@ -1,23 +1,33 @@
 using UnityEngine;
 using System.Collections;
 
-public class LandingPad : MonoBehaviour {
-	
+/// <summary>
+/// Component of the prefabs LandingPad gameobject
+/// </summary>
+public class LandingPad : MonoBehaviour
+{	
 	public Light stationLight;
 	public Material onMaterial;
 	public Color onColor;
-	public GuiInGame Gui;
+	public PlayerShip shipScriptInstance;
 	
 	// Use this for initialization
 	void Start ()
 	{
-		//Automatically populate the Gui variable with the Gui script attached to the EmptyObject Gui using its Gui Tag
-		Gui = GameObject.FindWithTag("Gui").GetComponent(typeof(GuiInGame)) as GuiInGame;
+		if (Globals.PlayerShip != null)
+		{
+			shipScriptInstance = Globals.PlayerShip.GetComponent(typeof(PlayerShip)) as PlayerShip;
+		}
+		else
+		{
+			//populate the shipScriptInstance variable with the PlayerShip script attached to the Ship using its "Player" Tag
+			shipScriptInstance = GameObject.FindWithTag("Player").GetComponent(typeof(PlayerShip)) as PlayerShip;
+		}
 	}
 	
 	// Update is called once per frame
-	void Update () {
-	
+	void Update ()
+	{
 	}
 	
 	public void Activate()
@@ -27,11 +37,11 @@ public class LandingPad : MonoBehaviour {
 		
 		if (stationLight.color != onColor)
 		{
-			print (gameObject.name + " has been activated");
+			Debug.Log(gameObject.name + " has been activated");
 			renderer.material = onMaterial;
 			stationLight.color = onColor;
 		
-			Gui.LandingPadActivated();
+			shipScriptInstance.LandingPadActivated();
 		}
 	}
 }

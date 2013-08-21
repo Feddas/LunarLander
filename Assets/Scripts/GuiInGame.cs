@@ -2,6 +2,9 @@ using UnityEngine;
 using System.Collections;
 using System;
 
+/// <summary>
+/// Component of Level1 scenes Gui empty gameobject
+/// </summary>
 public class GuiInGame : MonoBehaviour {
     public GameObject nguiControls;
     public GameObject nguiMenu;
@@ -10,7 +13,6 @@ public class GuiInGame : MonoBehaviour {
 	public AudioClip WinClip;
 	public AudioClip LoseClip;
     private string guiMode = "InGame";
-	private int numActivated, totalLandingPads;
 	private bool isMenuDisplayed = false;
 	
 	private string toggleSoundLabel
@@ -23,7 +25,6 @@ public class GuiInGame : MonoBehaviour {
 	
 	void Start ()
 	{
-		totalLandingPads = (GameObject.FindGameObjectsWithTag("LandingPad") as GameObject[]).Length;
 		toggleSound();
 	}
 	
@@ -100,17 +101,7 @@ public class GuiInGame : MonoBehaviour {
 	}
 	#endregion [ Button events ]
 	
-	public void LandingPadActivated()
-	{
-		numActivated++;
-		if (numActivated == totalLandingPads)
-		{
-			Win();
-		}
-		print ("LZ activated");
-	}
-	
-	private void Win()
+	public void Win()
 	{
 		if (Globals.IsSoundOn)
 		{
@@ -124,7 +115,6 @@ public class GuiInGame : MonoBehaviour {
 	
 	public void Lose()
 	{
-		numActivated = 0;
 		Action afterExplosion = () => 
 		{
 			if (Globals.IsSoundOn)
@@ -135,6 +125,8 @@ public class GuiInGame : MonoBehaviour {
 			Time.timeScale = 0;
 			guiMode = "Lose";
 		};
+		
+		//Refactor: try to move this call into PlayerShip.cs, tried couldn't figure out why Coroutine wouldn't work
 		StartCoroutine(yieldForExplosion(afterExplosion));
 	}
 	

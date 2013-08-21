@@ -2,6 +2,9 @@ using UnityEngine;
 using System.Collections;
 using System;
 
+/// <summary>
+/// Component of MainMenu scenes Gui empty gameobject
+/// </summary>
 //[ExecuteInEditMode]
 public class GuiMainMenu : MonoBehaviour {
 	public void OnClickNewGame()

@@ -1,8 +1,14 @@
 using UnityEngine;
 using System.Collections;
 
-public class PlayerTouch : MonoBehaviour {
-    /// <summary> default to the bottom third of the screen </summary>
+/// <summary>
+/// Component of Level1 scenes "Touch for Left/Right Thrusters" buttons
+/// </summary>
+public class PlayerTouch : MonoBehaviour
+{
+	/// <summary>
+	/// Players choice in ships movement direction.
+	/// </summary>
     public PlayerMoveEnum choice = PlayerMoveEnum.Undetermined;
 	
     private void OnGUI()
@@ -10,15 +16,15 @@ public class PlayerTouch : MonoBehaviour {
     }
 	
 	bool isPressed;
+	
+	/// <summary>
+	/// This method is called by NGUI's UIButton.cs click event handler.
+	/// </summary>
 	void OnPress(bool isDown)
 	{
 		isPressed = isDown;
-		
-		if (isPressed == false)
-			count = 0;
 	}
 	
-	int count = 0;
 	void Update()
 	{
 		if (isPressed
@@ -27,6 +33,7 @@ public class PlayerTouch : MonoBehaviour {
 			&& Globals.RightThruster != null
 			&& Globals.PlayerShip != null)
 		{
+			//determine how to move the ship
 			Thrusters thrusters = new Thrusters()
 			{
 				ThrusterBottom = Globals.BottomThruster,
@@ -34,8 +41,9 @@ public class PlayerTouch : MonoBehaviour {
 				ThrusterRight = Globals.RightThruster,
 			};
 			Vector3 shipForce = thrusters.ThrustOn(choice);
+			
+			//move the ship
 			Globals.PlayerShip.AddForce(shipForce);
-            //print(choice.ToString() + " fire #" + count++);
 		}
 	}
 }
