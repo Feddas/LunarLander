@@ -5,17 +5,18 @@ using System;
 /// <summary>
 /// Component of Level1 scenes Gui empty gameobject
 /// </summary>
-public class GuiInGame : MonoBehaviour {
-    public GameObject nguiControls;
-    public GameObject nguiMenu;
-    public GameObject nguiMenuTopButton;
-    public GameObject nguiMenuSoundButton;
+public class GuiInGame : MonoBehaviour
+{
+	public GameObject nguiControls;
+	public GameObject nguiMenu;
+	public GameObject nguiMenuTopButton;
+	public GameObject nguiMenuSoundButton;
 	public AudioClip WinClip;
 	public AudioClip LoseClip;
 	public UILabel ScoreLevel;
 	public UILabel ScoreTotal;
 	
-    private string guiMode = "InGame";
+	private State game = new State(Mode.InGame);
 	private bool isMenuDisplayed = false;
 	
 	private string toggleSoundLabel
@@ -29,38 +30,44 @@ public class GuiInGame : MonoBehaviour {
 	void Start ()
 	{
 		toggleSound();
+		game.CurrentModeChanged += HandleGameModeChanged;
+	}
+
+	void HandleGameModeChanged (object sender, EventArgs<Mode> e)
+	{
+		//Debug.Log("Gamemode is now " + e.Data.ToString() + " == " + game.CurrentMode.ToString());
+		
+		//show menu
+		if (isMenuDisplayed == false && game.CurrentMode != Mode.InGame)
+		{
+			displayGui(nguiMenu);
+			changeButton(nguiMenuSoundButton, toggleSoundLabel);
+			if (game.CurrentMode == Mode.Paused)
+			{
+				changeButton(nguiMenuTopButton, "Resume Game", "OnClickResume");
+			}
+			else if (game.CurrentMode == Mode.Win)
+			{
+				changeButton(nguiMenuTopButton, "Next Level", "OnClickNextLevel");
+			}
+			else if (game.CurrentMode == Mode.Lose)
+			{
+				changeButton(nguiMenuTopButton, "Retry Level", "OnClickRetry");
+			}
+		}
+		
+		//show space ship controls HUD
+		else if (game.CurrentMode == Mode.InGame)
+		{
+			displayGui(nguiControls);
+		}
 	}
 	
 	void Update () {
 		if (Input.GetKeyDown("escape"))
 		{
 			Time.timeScale = 0;
-			guiMode = "Paused";
-		}
-	}
-	
-	void OnGUI ()
-	{
-		if (isMenuDisplayed == false && guiMode != "InGame")
-		{
-			displayGui(nguiMenu);
-			changeButton(nguiMenuSoundButton, toggleSoundLabel);
-			if (guiMode == "Paused")
-			{
-				changeButton(nguiMenuTopButton, "Resume Game", "OnClickResume");
-			}
-			else if (guiMode == "Win")
-			{
-				changeButton(nguiMenuTopButton, "Next Level", "OnClickNextLevel");
-			}
-			else if (guiMode == "Lose")
-			{
-				changeButton(nguiMenuTopButton, "Retry Level", "OnClickRetry");
-			}
-		}
-		else if (guiMode == "InGame")
-		{
-			displayGui(nguiControls);
+			game.CurrentMode = Mode.Paused;
 		}
 	}
 	
@@ -68,20 +75,20 @@ public class GuiInGame : MonoBehaviour {
 	public void OnClickResume()
 	{
 		Time.timeScale = 1;
-		guiMode = "InGame";
+		game.CurrentMode = Mode.InGame;
 	}
 	
 	public void OnClickNextLevel()
 	{
 		Time.timeScale = 1;
-		guiMode = "InGame";
+		game.CurrentMode = Mode.InGame;
 		Application.LoadLevel(Application.loadedLevel+1);
 	}
 	
 	public void OnClickRetry()
 	{
 		Time.timeScale = 1;
-		guiMode = "InGame";
+		game.CurrentMode = Mode.InGame;
 		Application.LoadLevel(Application.loadedLevel);
 	}
 	
@@ -117,7 +124,7 @@ public class GuiInGame : MonoBehaviour {
 			audio.Play();
 		}
 		Time.timeScale = 0;
-		guiMode = "Win";
+		game.CurrentMode = Mode.Win;
 		PlayerPrefs.SetInt(PlayerPrefKey.Level, Application.loadedLevel+1);
 		int totalScore = levelScore;
 		if (PlayerPrefs.HasKey(PlayerPrefKey.TotalScore))
@@ -144,7 +151,7 @@ public class GuiInGame : MonoBehaviour {
 				audio.Play();
 			}
 			Time.timeScale = 0;
-			guiMode = "Lose";
+			game.CurrentMode = Mode.Lose;
 		};
 		
 		//Refactor: try to move this call into PlayerShip.cs, tried couldn't figure out why Coroutine wouldn't work
