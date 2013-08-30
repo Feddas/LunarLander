@@ -19,7 +19,7 @@ Assets used
 
 What to dev next
 ----------------
-- Added everything in the cgCookie LunarLander series except the final 7th video: http://cgcookie.com/unity/lessons/7-bonus-fuel-meter-music-and-persistant-data-camera-follow/
+- Everything past the fuel guage in the cgCookie LunarLander series, which is 18:08 into http://cgcookie.com/unity/lessons/7-bonus-fuel-meter-music-and-persistant-data-camera-follow/
 - Fix toggle sounds on the main menu
 - Add in-game Mini-map
 

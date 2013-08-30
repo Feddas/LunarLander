@@ -15,8 +15,11 @@ public class GuiInGame : MonoBehaviour
 	public AudioClip LoseClip;
 	public UILabel ScoreLevel;
 	public UILabel ScoreTotal;
+	public UISlider FuelGauge;
 	
-	private State game = new State(Mode.InGame);
+	private State game;
+	private float fuelGaugeMaxWidth;
+	private float fuelMax;
 	private bool isMenuDisplayed = false;
 	
 	private string toggleSoundLabel
@@ -30,10 +33,16 @@ public class GuiInGame : MonoBehaviour
 	void Start ()
 	{
 		toggleSound();
+		game = Globals.Game;
 		game.CurrentModeChanged += HandleGameModeChanged;
+		game.FuelRemainingChanged += HandleFuelRemainingChanged;
+		
+		//Fuel
+		game.FuelRemaining = fuelMax = 400;
+		fuelGaugeMaxWidth = FuelGauge.foreground.localScale.x;
 	}
 
-	void HandleGameModeChanged (object sender, EventArgs<Mode> e)
+	void HandleGameModeChanged(object sender, EventArgs<Mode> e)
 	{
 		//Debug.Log("Gamemode is now " + e.Data.ToString() + " == " + game.CurrentMode.ToString());
 		
@@ -88,7 +97,7 @@ public class GuiInGame : MonoBehaviour
 	public void OnClickRetry()
 	{
 		Time.timeScale = 1;
-		game.CurrentMode = Mode.InGame;
+		Globals.Game = new State(Mode.InGame);
 		Application.LoadLevel(Application.loadedLevel);
 	}
 	
@@ -218,4 +227,39 @@ public class GuiInGame : MonoBehaviour
 //			sound.enabled = isSoundOn;
 //		}
 	}
+	
+	#region [ Fuel ]
+	void HandleFuelRemainingChanged (object sender, EventArgs<float> e)
+	{
+		if (e.Data <= 0.01)
+		{
+			//disable buttons "Left Thrusters" & "Right Thrusters" otherwise they will still make the thruster audio
+			foreach (GameObject test in GameObject.FindGameObjectsWithTag("HudButton"))
+				test.SetActive(false);
+			this.Lose();
+		}
+		else
+		{
+			UpdateFuelMeter(e.Data/fuelMax);
+		}
+	}
+	
+	public void UpdateFuelMeter(float toPercent)
+	{
+		//Debug.Log(toPercent + " of " + fuelGaugeMaxWidth + " in " + FuelGauge.foreground.localScale.ToString());
+		
+		//Update FuelGauge width
+		FuelGauge.foreground.localScale = new Vector3(
+			fuelGaugeMaxWidth * toPercent,
+			FuelGauge.foreground.localScale.y,
+			FuelGauge.foreground.localScale.z);
+		
+		//Update FuelGauge color
+		UISprite sliderSprite = FuelGauge.foreground.GetComponent<UISprite>();		
+		if (sliderSprite != null)
+		{
+			sliderSprite.color = Color.Lerp(Color.red, Color.green, toPercent);
+		}
+	}
+	#endregion [ Fuel ]
 }

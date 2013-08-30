@@ -11,9 +11,17 @@ public class PlayerKeyboard : MonoBehaviour
 	{
 	}
 	
+	public static bool IsKeyboardThrustersOn
+	{
+		get 
+		{
+			return Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0;
+		}
+	}
+	
 	private void Update ()
 	{
-		bool isPressed = Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0;
+		bool isPressed = PlayerKeyboard.IsKeyboardThrustersOn;
 		if (isPressed && Thrusters.OfShipInitialized)
 		{
 			//determine how to move the ship

@@ -53,7 +53,8 @@ public class PlayerShip : MonoBehaviour
 		if (Globals.IsSoundOn == false)
 			return;
 		
-		if (Input.GetAxis("Vertical") != 0 || Input.GetAxis("Horizontal") != 0)
+		bool keyboardThrustersOn = PlayerKeyboard.IsKeyboardThrustersOn;
+		if (keyboardThrustersOn && Thrusters.HaveFuel)
 		{
 			if(audio.isPlaying == false)
 			{

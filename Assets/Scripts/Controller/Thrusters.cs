@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System;
 
 public enum PlayerMoveEnum
 {
@@ -18,6 +19,9 @@ public class Thrusters {
 	
 	//public Rigidbody ObjToBeThrust { get; set; }
 	
+	private const float fuelBurnSpeed = 20;
+	public static bool HaveFuel { get { return Globals.Game.FuelRemaining > State.FuelMinimum; }}
+	
 	public Thrusters()
 	{
 	}
@@ -35,6 +39,29 @@ public class Thrusters {
 	
 	public Vector3 ThrustOn(PlayerMoveEnum direction)
 	{
+		if (Thrusters.HaveFuel == false)
+			return new Vector3(0,0,0);
+		
+		//update fuel usage
+		if (direction != PlayerMoveEnum.Undetermined)
+		{
+			float fuelRemaining = Globals.Game.FuelRemaining;
+			fuelRemaining -= fuelBurnSpeed * Time.deltaTime;
+			if (fuelRemaining <= State.FuelMinimum) //we ran out of fuel
+			{
+				fuelRemaining = State.FuelMinimum; //uses 0.01 because a value of 0 causes trouble in handling division by zero
+								
+				ThrusterBottom.Emit(0);
+				ThrusterLeft.Emit(0);
+				ThrusterRight.Emit(0);
+				Globals.Game.FuelRemaining = fuelRemaining;
+				
+				return new Vector3(0,0,0);
+			}
+			
+			Globals.Game.FuelRemaining = fuelRemaining;
+		}
+		
 		float sideThrust = 600 * Time.deltaTime;
 		float bottomThrust = 2000 * Time.deltaTime;
 		switch (direction)
