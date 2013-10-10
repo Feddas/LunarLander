@@ -54,7 +54,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100002}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -.575480402, y: -6.82812023, z: -.005859375}
+  m_LocalPosition: {x: 0, y: -2, z: 0}
   m_LocalScale: {x: 4, y: 1, z: 4}
   m_Children:
   - {fileID: 400000}
@@ -71,7 +71,7 @@ Renderer:
   m_LightmapIndex: 255
   m_LightmapTilingOffset: {x: 1, y: 1, z: 0, w: 0}
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000e000000000000000, type: 0}
+  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -117,6 +117,8 @@ AudioSource:
   Pan2D: 0
   rolloffMode: 0
   BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
   rolloffCustomCurve:
     serializedVersion: 2
     m_Curve:
@@ -197,10 +199,11 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5d2156abf7850cd47a8f35966e3c7baf, type: 3}
   m_Name: 
+  m_EditorClassIdentifier: 
   stationLight: {fileID: 10800000}
   onMaterial: {fileID: 2100000, guid: d60947e7126efca46ab7c78ad6a1094c, type: 2}
   onColor: {r: 0, g: 1, b: 0, a: 0}
-  Gui: {fileID: 0}
+  shipScriptInstance: {fileID: 0}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

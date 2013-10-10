@@ -3,7 +3,7 @@ using System.Collections;
 using System;
 
 /// <summary>
-/// Component of Level1 scenes Gui empty gameobject
+/// Component of Level1 scenes GuiScripts empty gameobject
 /// </summary>
 public class GuiInGame : MonoBehaviour
 {
@@ -16,6 +16,30 @@ public class GuiInGame : MonoBehaviour
 	public UILabel ScoreLevel;
 	public UILabel ScoreTotal;
 	public UISlider FuelGauge;
+	
+	/// <summary>
+	/// TODO: fix the bug described in this summary
+	/// This property is being used to try to trap a bug that occurs on the load of a second game level
+	/// repo:
+	/// 1. open Level1
+	/// 2. hit esc to bring up the menu
+	/// 3. go to main menu
+	/// 4. start a new game
+	/// 5. OBSERVE: FuelGauge has a value when called from start()
+	/// 6. press a thrusters button
+	/// 7. OBSERVE: FuelGauge is now null when called from UpdateFuelMeter()
+	/// </summary>
+	private UISlider FuelGugeProperty
+	{
+		get
+		{
+			return FuelGauge;
+		}
+		set
+		{
+			FuelGauge = value;
+		}
+	}
 	
 	private State game;
 	private float fuelGaugeMaxWidth;
@@ -39,7 +63,7 @@ public class GuiInGame : MonoBehaviour
 		
 		//Fuel
 		game.FuelRemaining = fuelMax = 400;
-		fuelGaugeMaxWidth = FuelGauge.foreground.localScale.x;
+		fuelGaugeMaxWidth = FuelGugeProperty.foreground.localScale.x;
 	}
 
 	void HandleGameModeChanged(object sender, EventArgs<Mode> e)
@@ -249,13 +273,13 @@ public class GuiInGame : MonoBehaviour
 		//Debug.Log(toPercent + " of " + fuelGaugeMaxWidth + " in " + FuelGauge.foreground.localScale.ToString());
 		
 		//Update FuelGauge width
-		FuelGauge.foreground.localScale = new Vector3(
+		FuelGugeProperty.foreground.localScale = new Vector3(
 			fuelGaugeMaxWidth * toPercent,
-			FuelGauge.foreground.localScale.y,
-			FuelGauge.foreground.localScale.z);
+			FuelGugeProperty.foreground.localScale.y,
+			FuelGugeProperty.foreground.localScale.z);
 		
 		//Update FuelGauge color
-		UISprite sliderSprite = FuelGauge.foreground.GetComponent<UISprite>();		
+		UISprite sliderSprite = FuelGugeProperty.foreground.GetComponent<UISprite>();		
 		if (sliderSprite != null)
 		{
 			sliderSprite.color = Color.Lerp(Color.red, Color.green, toPercent);
