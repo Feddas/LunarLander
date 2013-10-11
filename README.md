@@ -22,6 +22,7 @@ What to dev next
 - Procedurally create caves using Tile Maps / dynamic meshes: http://www.youtube.com/playlist?feature=c4-feed-u&list=PLbghT7MmckI4qGA0Wm_TZS8LVrqS47I9R
 - Fix toggle sounds on the main menu
 - Add in-game Mini-map
+- Fix blurry text via build settings: http://www.tasharen.com/forum/index.php?topic=194.0
 
 
 Tips from this cgCookie series

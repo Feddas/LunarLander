@@ -12,6 +12,7 @@ public enum Mode
 	Paused,
 	Win,
 	Lose,
+	MainMenu,
 }
 
 /// <summary>

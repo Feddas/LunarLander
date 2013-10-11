@@ -3,7 +3,8 @@ using System.Collections;
 using System;
 
 /// <summary>
-/// Component of Level1 scenes GuiScripts empty gameobject
+/// Component of Level1 scenes GuiScripts empty gameobject.
+/// The parent of the GuiScripts object is persistent across scenes.
 /// </summary>
 public class GuiInGame : MonoBehaviour
 {
@@ -17,34 +18,9 @@ public class GuiInGame : MonoBehaviour
 	public UILabel ScoreTotal;
 	public UISlider FuelGauge;
 	
-	/// <summary>
-	/// TODO: fix the bug described in this summary
-	/// This property is being used to try to trap a bug that occurs on the load of a second game level
-	/// repo:
-	/// 1. open Level1
-	/// 2. hit esc to bring up the menu
-	/// 3. go to main menu
-	/// 4. start a new game
-	/// 5. OBSERVE: FuelGauge has a value when called from start()
-	/// 6. press a thrusters button
-	/// 7. OBSERVE: FuelGauge is now null when called from UpdateFuelMeter()
-	/// </summary>
-	private UISlider FuelGugeProperty
-	{
-		get
-		{
-			return FuelGauge;
-		}
-		set
-		{
-			FuelGauge = value;
-		}
-	}
-	
 	private State game;
 	private float fuelGaugeMaxWidth;
-	private float fuelMax;
-	private bool isMenuDisplayed = false;
+	private const float fuelMax = 400;
 	
 	private string toggleSoundLabel
 	{
@@ -54,7 +30,7 @@ public class GuiInGame : MonoBehaviour
 		}
 	}
 	
-	void Start ()
+	void Start()
 	{
 		toggleSound();
 		game = Globals.Game;
@@ -62,16 +38,26 @@ public class GuiInGame : MonoBehaviour
 		game.FuelRemainingChanged += HandleFuelRemainingChanged;
 		
 		//Fuel
-		game.FuelRemaining = fuelMax = 400;
-		fuelGaugeMaxWidth = FuelGugeProperty.foreground.localScale.x;
+		fuelGaugeMaxWidth = FuelGauge.foreground.localScale.x;
+		resetFuelMeter();
 	}
 
 	void HandleGameModeChanged(object sender, EventArgs<Mode> e)
 	{
 		//Debug.Log("Gamemode is now " + e.Data.ToString() + " == " + game.CurrentMode.ToString());
+				
+		//show space ship controls HUD
+		if (game.CurrentMode == Mode.InGame)
+		{
+			displayGui(nguiControls);
+		}
+		else if (game.CurrentMode == Mode.MainMenu)
+		{
+			displayGui(null);
+		}
 		
 		//show menu
-		if (isMenuDisplayed == false && game.CurrentMode != Mode.InGame)
+		else if (game.CurrentMode != Mode.InGame)
 		{
 			displayGui(nguiMenu);
 			changeButton(nguiMenuSoundButton, toggleSoundLabel);
@@ -88,15 +74,10 @@ public class GuiInGame : MonoBehaviour
 				changeButton(nguiMenuTopButton, "Retry Level", "OnClickRetry");
 			}
 		}
-		
-		//show space ship controls HUD
-		else if (game.CurrentMode == Mode.InGame)
-		{
-			displayGui(nguiControls);
-		}
 	}
 	
-	void Update () {
+	void Update()
+	{
 		if (Input.GetKeyDown("escape"))
 		{
 			Time.timeScale = 0;
@@ -114,14 +95,19 @@ public class GuiInGame : MonoBehaviour
 	public void OnClickNextLevel()
 	{
 		Time.timeScale = 1;
+		resetFuelMeter();
 		game.CurrentMode = Mode.InGame;
-		Application.LoadLevel(Application.loadedLevel+1);
+		if (Application.loadedLevel < 3)
+			Application.LoadLevel(Application.loadedLevel+1);
+		else
+			Application.LoadLevel(3); //3 is scene "LevelN"
 	}
 	
 	public void OnClickRetry()
 	{
 		Time.timeScale = 1;
-		Globals.Game = new State(Mode.InGame);
+		resetFuelMeter();
+		game.CurrentMode = Mode.InGame;
 		Application.LoadLevel(Application.loadedLevel);
 	}
 	
@@ -135,6 +121,8 @@ public class GuiInGame : MonoBehaviour
 	public void OnClickMainMenu()
 	{
 		Time.timeScale = 1;
+		resetFuelMeter();
+		game.CurrentMode = Mode.MainMenu;
 		Application.LoadLevel(0);
 	}
 	
@@ -200,23 +188,20 @@ public class GuiInGame : MonoBehaviour
 	
 	private void displayGui(GameObject primary)
 	{
-		if (primary == nguiMenu)
+		if (primary == null)
 		{
+			NGUITools.SetActive(nguiControls,false);
+			NGUITools.SetActive(nguiMenu,false);
+		}
+		else if (primary == nguiMenu)
+		{
+			NGUITools.SetActive(nguiControls,false);
 			NGUITools.SetActive(nguiMenu,true);
-			
-			//SetActive() line below causes exception "!IsActive () && !m_RunInEditMode"
-			//NGUITools.SetActive(nguiControls,false);
-			
-			isMenuDisplayed = true;
 		}
 		else
 		{
+			NGUITools.SetActive(nguiControls,true);
 			NGUITools.SetActive(nguiMenu,false);
-			
-			//deactivated this line due to "!IsActive () && !m_RunInEditMode" error above
-			//NGUITools.SetActive(nguiControls,true);
-			
-			isMenuDisplayed = false;
 		}
 	}
 	
@@ -258,8 +243,8 @@ public class GuiInGame : MonoBehaviour
 		if (e.Data <= 0.01)
 		{
 			//disable buttons "Left Thrusters" & "Right Thrusters" otherwise they will still make the thruster audio
-			foreach (GameObject test in GameObject.FindGameObjectsWithTag("HudButton"))
-				test.SetActive(false);
+			foreach (GameObject hudButton in GameObject.FindGameObjectsWithTag("HudButton"))
+				hudButton.SetActive(false);
 			this.Lose();
 		}
 		else
@@ -273,17 +258,23 @@ public class GuiInGame : MonoBehaviour
 		//Debug.Log(toPercent + " of " + fuelGaugeMaxWidth + " in " + FuelGauge.foreground.localScale.ToString());
 		
 		//Update FuelGauge width
-		FuelGugeProperty.foreground.localScale = new Vector3(
+		FuelGauge.foreground.localScale = new Vector3(
 			fuelGaugeMaxWidth * toPercent,
-			FuelGugeProperty.foreground.localScale.y,
-			FuelGugeProperty.foreground.localScale.z);
+			FuelGauge.foreground.localScale.y,
+			FuelGauge.foreground.localScale.z);
 		
 		//Update FuelGauge color
-		UISprite sliderSprite = FuelGugeProperty.foreground.GetComponent<UISprite>();		
+		UISprite sliderSprite = FuelGauge.foreground.GetComponent<UISprite>();		
 		if (sliderSprite != null)
 		{
 			sliderSprite.color = Color.Lerp(Color.red, Color.green, toPercent);
 		}
+	}
+	
+	private void resetFuelMeter()
+	{
+		game.FuelRemaining = fuelMax;
+		UpdateFuelMeter(1); //reset FuelGauge
 	}
 	#endregion [ Fuel ]
 }

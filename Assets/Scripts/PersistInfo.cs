@@ -37,8 +37,14 @@ public class PersistInfo : MonoBehaviour
 	
 	private void playNextMusicTrack()
 	{
+		if (this.MusicTracks.Length == 0)
+		{
+			Debug.Log("No music. Add music to UiInGame(2D)'s PersistInfo script");
+			return;
+		}
+		
 		//set the track
-		if (currentTrack == MusicTracks.Length - 1)
+		else if (currentTrack == MusicTracks.Length - 1)
 		{
 			currentTrack = 0;
 		}
