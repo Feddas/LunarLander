@@ -12,7 +12,7 @@ public class LandingPad : MonoBehaviour
 	public PlayerShip shipScriptInstance;
 	
 	// Use this for initialization
-	void Start ()
+	void Start()
 	{
 		if (Globals.PlayerShip != null)
 		{
@@ -26,7 +26,7 @@ public class LandingPad : MonoBehaviour
 	}
 	
 	// Update is called once per frame
-	void Update ()
+	void Update()
 	{
 	}
 	
