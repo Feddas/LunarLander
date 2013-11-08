@@ -69,7 +69,7 @@ PlayerSettings:
     16:10: 1
     16:9: 1
     Others: 1
-  iPhoneBundleIdentifier: com.Company.ProductName
+  iPhoneBundleIdentifier: com.Company.LunarLander
   productGUID: b4d24f68580c52040846db21899e1ebe
   iPhoneBundleVersion: .19
   AndroidBundleVersionCode: 1
