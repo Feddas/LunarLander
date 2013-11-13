@@ -40,14 +40,17 @@ public class GenHelper
 			{
 				meshBuilder.Vertices.Add(Vector2to3(vector2, -4));
 				meshBuilder.Vertices.Add(Vector2to3(vector2, 4));
+				
+				Vector2 lipPoint = getWallLipAt(vertices, index);
+				meshBuilder.Vertices.Add(Vector2to3(lipPoint, -4));
 			}
 			else // make use of existing vertex.
 			{
 				if (existingVertexIndex != -1)
 					Debug.Log("BuildWall is reusing too many vertices");
 				existingVertexIndex = vertices.IndexOf(vector2)
-					* 2 // because there are 2 vertices added per vector2 (z of 4 & -4)
-						+ 1; // use the z of 4 vertex
+					* 3 // because there are 3 vertices added per vector2 (z of 4, 4 & -4)
+						+ 1; // use the non-lip z of 4 vertex
 			}
 			
 			//init UV map with values for index == 0
@@ -59,21 +62,31 @@ public class GenHelper
 			{
 				uvFront.x = uvBack.x = (1.0f / segments) * index;
 				
-				int[] indices = quadrilateralIndices(isDistinctVertex, meshBuilder.Vertices.Count);
+				int[] indices = wallSegmentIndices(isDistinctVertex, meshBuilder.Vertices.Count);
 				if (indices == null)
 					continue; //skip adding triangles for this vertex iteration
 				
+				// 0-1-4  vertex index layout
+				// | | |
+				// 2-3-5
 				int index0 = indices[0],
 					index1 = indices[1],
 					index2 = indices[2],
-					index3 = indices[3];
+					index3 = indices[3],
+					lip4 = indices[4],
+					lip5 = indices[5];
 				
 				meshBuilder.AddTriangle(index0, index2, index1);
 				meshBuilder.AddTriangle(index2, index3, index1);
+				
+				//create lip on positive z-index
+//				meshBuilder.AddTriangle(lip4, lip5, index0);
+//				meshBuilder.AddTriangle(lip5, index2, index0);
+				//create lip on negative z-index
+				meshBuilder.AddTriangle(index1, index3, lip4);
+				meshBuilder.AddTriangle(index3, lip5, lip4);
 			}
-			
-			//Debug.Log("added " + uvFront.x + ", " + uvFront.y);
-			
+
 			meshBuilder.UVs.Add(uvFront);
 			meshBuilder.UVs.Add(uvBack);
 		}
@@ -89,10 +102,10 @@ public class GenHelper
 		return new Vector2(vector.x, vector.y);
 	}
 	
-	private int[] quadrilateralIndices(bool isNewVertex, int vertexCount)
+	private int[] wallSegmentIndices(bool isNewVertex, int vertexCount)
 	{
-		int[] indices = new int[4];
-		int baseIndex = vertexCount - 1;
+		int[] indices = new int[6];
+		int baseIndex = vertexCount - 2; //base off of the non-lip added at z of 4
 		
 		// handle new vertex where the previous vertex was also new
 		if (isNewVertex //can use Vertices.count
@@ -100,8 +113,12 @@ public class GenHelper
 		{
 			indices[0] = baseIndex;
 			indices[1] = baseIndex - 1;
-			indices[2] = baseIndex - 2;
-			indices[3] = baseIndex - 3;
+			indices[2] = baseIndex - 3;
+			indices[3] = baseIndex - 4;
+			
+			//lip segment
+			indices[4] = baseIndex + 1;
+			indices[5] = baseIndex - 2;
 		}
 		
 		// handle new vertex where the previous vertex was old
@@ -113,6 +130,10 @@ public class GenHelper
 			indices[2] = existingVertexIndex;
 			indices[3] = existingVertexIndex - 1;
 			
+			//lip segment
+			indices[4] = baseIndex + 1;
+			indices[5] = existingVertexIndex + 1;
+			
 			existingVertexIndex = -1; // previous is now this newly added vertex
 		}
 				
@@ -123,6 +144,10 @@ public class GenHelper
 			indices[1] = existingVertexIndex - 1;
 			indices[2] = baseIndex;
 			indices[3] = baseIndex - 1;
+			
+			//lip segment
+			indices[4] = existingVertexIndex + 1;
+			indices[5] = baseIndex + 1;
 		}
 		
 		//note can't handle two old indices because
@@ -130,5 +155,35 @@ public class GenHelper
 		// return null; //flag that we don't want to add triangles
 		
 		return indices;
+	}
+	
+	/// <summary>
+	/// vertices should not be distinct. no check for (existingVertexindex != 1) is done.
+	/// </summary>
+	private Vector2 getWallLipAt(IList<Vector2> vertices, int index)
+	{
+		int previousIndex = index - 1,
+			nextIndex = index + 1;
+		
+		if (index == 0) //assume previous loops from the last element of vertices
+		{
+			previousIndex = vertices.Count - 2; //skip the end since it's a repeat of the start
+		}
+		else if (index == vertices.Count - 1) //assume next loops from the first element of vertices
+		{
+			nextIndex = 1; //skip the start since it's a repeat of the end
+		}
+		
+		//determine the vector representing wall segments
+		Vector2 previous = vertices[index] - vertices[previousIndex];
+		Vector2 next = vertices[nextIndex] - vertices[index];
+		
+		Vector2 bisect = -1 * previous.normalized + next.normalized;
+		float crossDirection = Vector3.Cross(this.Vector2to3(previous, 0), this.Vector2to3(bisect, 0)).z;
+		if (crossDirection < 0) // only use the bisecting vector on the right side
+			bisect *= -1;
+		
+		Vector2 result = vertices[index] + 8 * bisect.normalized;//4 * (previous - next).normalized;
+		return result;
 	}
 }

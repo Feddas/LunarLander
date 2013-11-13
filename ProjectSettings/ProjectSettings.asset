@@ -71,9 +71,9 @@ PlayerSettings:
     Others: 1
   iPhoneBundleIdentifier: com.Company.LunarLander
   productGUID: b4d24f68580c52040846db21899e1ebe
-  iPhoneBundleVersion: .19
+  iPhoneBundleVersion: .20
   AndroidBundleVersionCode: 1
-  AndroidMinSdkVersion: 6
+  AndroidMinSdkVersion: 10
   AndroidPreferredInstallLocation: 1
   aotOptions: 
   apiCompatibilityLevel: 2
