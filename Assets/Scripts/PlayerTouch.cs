@@ -20,7 +20,24 @@ public class PlayerTouch : MonoBehaviour
 	{
 		isPressed = isDown;
 	}
-	
+
+	void HandleGameModeChanged(object sender, EventArgs<Mode> e)
+	{
+		//ensure thrusters are released when the game mode changes
+		if (Globals.Game.CurrentMode != Mode.InGame && isPressed)
+		{
+			isPressed = false;
+
+			//this game object is persisted even after a win, so do not dereference the handler as commented out below.
+			//Globals.Game.CurrentModeChanged -= HandleGameModeChanged;
+		}
+	}
+
+	void Start()
+	{
+		Globals.Game.CurrentModeChanged += HandleGameModeChanged;
+	}
+
 	void Update()
 	{
 		if (isPressed && Thrusters.OfShipInitialized)
