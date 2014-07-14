@@ -34,7 +34,10 @@ public class Cave : MonoBehaviour
 			Random.Range(-10, -4), Random.Range(-10, 4));
 		var pad2 = this.helper.PositionNew(this.LandingPad, 
 			Random.Range(4, 10), Random.Range(-10, 4));
-		
+
+		pad1.transform.Rotate(0, -90, 0);
+		pad2.transform.Rotate(0, -90, 0);
+
 		landingPadLocations.Add(helper.Vector3to2(pad1.transform.position));
 		landingPadLocations.Add(helper.Vector3to2(pad2.transform.position));
 	}

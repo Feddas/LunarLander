@@ -5,10 +5,10 @@ What is it?
 -----------
 Unity3D implementation of the game Lunar Lander. Roughly based off the tutorial provided by CgCookie: http://cgcookie.com/unity/2012/02/24/game-planning-lunar-lander-01/
 
-Playing version 25 (July 2014)
+Playing version 26 (July 2014)
 ----------
-Unity Web Player: https://googledrive.com/host/0B4lMnGVKRAYVSHZFVTc2U093VGs/LunarLander25.html
-Android *.apk: https://drive.google.com/file/d/0B4lMnGVKRAYVQWczVGFHUVNoc28
+Unity Web Player: https://googledrive.com/host/0B4lMnGVKRAYVSHZFVTc2U093VGs/LunarLander26.html
+Android *.apk: https://drive.google.com/file/d/0B4lMnGVKRAYVUDh1d3VrTDVHWG8
 
 Building the source code
 ------------
