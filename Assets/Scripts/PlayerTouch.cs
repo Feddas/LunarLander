@@ -55,7 +55,7 @@ public class PlayerTouch : MonoBehaviour
             //move the ship
             Globals.PlayerShip.AddForce(shipForce);
 
-            if (clipWhilePressed != null && clipWhilePressed.isReadyToPlay)
+            if (Globals.IsSoundOn && clipWhilePressed != null && clipWhilePressed.isReadyToPlay)
                 PlaySound(clipWhilePressed);
         }
         else
@@ -64,13 +64,14 @@ public class PlayerTouch : MonoBehaviour
         }
     }
 
+    /// <summary> first component found that is able to play sounds </summary>
+    private static AudioListener mListener;
+    private static System.DateTime timeLastClipEnds;
 
-    private static AudioListener mListener { get; set; }
     /// <summary>
     /// Play the specified audio clip with the specified volume and pitch.
-    /// </summary>
-
     /// PlaySound was copied from NGUI
+    /// </summary>
     static public AudioSource PlaySound(AudioClip clip, float volume = 1f, float pitch = 1f)
     {
         volume *= 1f;
@@ -89,8 +90,10 @@ public class PlayerTouch : MonoBehaviour
                 }
             }
 
-            if (mListener != null && mListener.enabled && mListener.gameObject.activeInHierarchy)
+            if (System.DateTime.Now > PlayerTouch.timeLastClipEnds // wait for last clip to play through
+                && mListener != null && mListener.enabled && mListener.gameObject.activeInHierarchy)
             {
+                PlayerTouch.timeLastClipEnds = System.DateTime.Now.AddSeconds(clip.length);
                 AudioSource source = mListener.audio;
                 if (source == null) source = mListener.gameObject.AddComponent<AudioSource>();
                 source.pitch = pitch;
