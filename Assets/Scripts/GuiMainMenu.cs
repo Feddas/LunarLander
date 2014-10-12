@@ -4,6 +4,11 @@ using System;
 
 /// <summary>
 /// Component of MainMenu scenes Gui empty gameobject
+/// Menu options:
+/// 1. NewGame (inGameChangesTo)=> Resume/Retry/NextLevel
+/// 2. ToggleSound
+/// 3. ContinueGame (inGameChangesTo)=> QuitToMainMenu
+/// 4. Quit
 /// </summary>
 //[ExecuteInEditMode]
 public class GuiMainMenu : MonoBehaviour

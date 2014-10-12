@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System;
+using System.Linq;
 
 /// <summary>
 /// Component of Level1 scenes GuiScripts empty gameobject.
@@ -8,15 +9,15 @@ using System;
 /// </summary>
 public class GuiInGame : MonoBehaviour
 {
-	public GameObject nguiControls;
-	public GameObject nguiMenu;
-	public GameObject nguiMenuTopButton;
-	public GameObject nguiMenuSoundButton;
+    public GameObject panelHud;
+    public GameObject panelMenu;
+    public GameObject MenuButton1;
+    public GameObject MenuButton2;
 	public AudioClip WinClip;
 	public AudioClip LoseClip;
-	public UILabel ScoreLevel;
-	public UILabel ScoreTotal;
-	public UISlider FuelGauge;
+    public UnityEngine.UI.Text ScoreLevel;
+    public UnityEngine.UI.Text ScoreTotal;
+    public UnityEngine.UI.Slider FuelGauge;
 	
 	private State game;
 	private float fuelGaugeMaxWidth;
@@ -32,13 +33,13 @@ public class GuiInGame : MonoBehaviour
 	
 	void Start()
 	{
-		toggleSound();
+		setSoundFromToggle();
 		game = Globals.Game;
 		game.CurrentModeChanged += HandleGameModeChanged;
 		game.FuelRemainingChanged += HandleFuelRemainingChanged;
 		
 		//Fuel
-		fuelGaugeMaxWidth = FuelGauge.foreground.localScale.x;
+        fuelGaugeMaxWidth = FuelGauge.value;
 		resetFuelMeter();
 	}
 
@@ -49,7 +50,7 @@ public class GuiInGame : MonoBehaviour
 		//show space ship controls HUD
 		if (game.CurrentMode == Mode.InGame)
 		{
-			displayGui(nguiControls);
+			displayGui(panelHud);
 		}
 		else if (game.CurrentMode == Mode.MainMenu)
 		{
@@ -59,19 +60,19 @@ public class GuiInGame : MonoBehaviour
 		//show menu
 		else if (game.CurrentMode != Mode.InGame)
 		{
-			displayGui(nguiMenu);
-			changeButton(nguiMenuSoundButton, toggleSoundLabel);
+			displayGui(panelMenu);
+            //changeButton2(MenuButton2, toggleSoundLabel);
 			if (game.CurrentMode == Mode.Paused)
 			{
-				changeButton(nguiMenuTopButton, "Resume Game", "OnClickResume");
+                changeButton(MenuButton1, "Resume Game", OnClickResume);
 			}
 			else if (game.CurrentMode == Mode.Win)
 			{
-				changeButton(nguiMenuTopButton, "Next Level", "OnClickNextLevel");
+                changeButton(MenuButton1, "Next Level", OnClickNextLevel);
 			}
 			else if (game.CurrentMode == Mode.Lose)
 			{
-				changeButton(nguiMenuTopButton, "Retry Level", "OnClickRetry");
+                changeButton(MenuButton1, "Retry Level", OnClickRetry);
 			}
 		}
 	}
@@ -90,10 +91,15 @@ public class GuiInGame : MonoBehaviour
 	{
 		Time.timeScale = 1;
 		game.CurrentMode = Mode.InGame;
+
+        //TODO: fix keyboard bug of thrust boost caused by thruster being engaged when pause was pressed
 	}
 	
 	public void OnClickNextLevel()
-	{
+    {
+        game.CurrentModeChanged -= HandleGameModeChanged;
+        game.FuelRemainingChanged -= HandleFuelRemainingChanged;
+
 		Time.timeScale = 1;
 		resetFuelMeter();
 		game.CurrentMode = Mode.InGame;
@@ -104,7 +110,10 @@ public class GuiInGame : MonoBehaviour
 	}
 	
 	public void OnClickRetry()
-	{
+    {
+        game.CurrentModeChanged -= HandleGameModeChanged;
+        game.FuelRemainingChanged -= HandleFuelRemainingChanged;
+
 		Time.timeScale = 1;
 		resetFuelMeter();
 		game.CurrentMode = Mode.InGame;
@@ -114,8 +123,8 @@ public class GuiInGame : MonoBehaviour
 	public void OnClickToggleSound()
 	{
 		Globals.IsSoundOn = !Globals.IsSoundOn;
-		changeButton(nguiMenuSoundButton, toggleSoundLabel);
-		toggleSound();
+		changeButton(this.MenuButton2, toggleSoundLabel);
+		setSoundFromToggle();
 	}
 	
 	public void OnClickMainMenu()
@@ -134,7 +143,7 @@ public class GuiInGame : MonoBehaviour
 	
 	public void UpdateScore(int levelScore)
 	{
-		ScoreLevel.text = "Level Score:" + levelScore;
+        ScoreLevel.text = "Level Score:" + levelScore;
 	}
 	
 	public void Win(int levelScore)
@@ -145,8 +154,11 @@ public class GuiInGame : MonoBehaviour
 			audio.Play();
 		}
 		Time.timeScale = 0;
-		game.CurrentMode = Mode.Win;
-		PlayerPrefs.SetInt(PlayerPrefKey.Level, Application.loadedLevel+1);
+        game.CurrentMode = Mode.Win;
+
+        if (Application.loadedLevel < 3) //3 is scene "LevelN"
+            PlayerPrefs.SetInt(PlayerPrefKey.Level, Application.loadedLevel+1);
+
 		int totalScore = levelScore;
 		if (PlayerPrefs.HasKey(PlayerPrefKey.TotalScore))
 		{
@@ -186,46 +198,48 @@ public class GuiInGame : MonoBehaviour
 		afterExplosion();
 	}
 	
-	private void displayGui(GameObject primary)
+    /// <summary> shows only the uiToShow. Hiding all other Ui's </summary>
+	private void displayGui(GameObject uiToShow)
 	{
-		if (primary == null)
+		if (uiToShow == null)
 		{
-			NGUITools.SetActive(nguiControls,false);
-			NGUITools.SetActive(nguiMenu,false);
+            panelHud.SetActive(false);
+            panelMenu.SetActive(false);
 		}
-		else if (primary == nguiMenu)
+		else if (uiToShow == panelMenu)
 		{
-			NGUITools.SetActive(nguiControls,false);
-			NGUITools.SetActive(nguiMenu,true);
+            panelHud.SetActive(false);
+            panelMenu.SetActive(true);
 		}
 		else
-		{
-			NGUITools.SetActive(nguiControls,true);
-			NGUITools.SetActive(nguiMenu,false);
+        {
+            panelHud.SetActive(true);
+            panelMenu.SetActive(false);
 		}
 	}
+
+    private void changeButton(GameObject button, string text, UnityEngine.Events.UnityAction action = null)
+    {
+        var label = button.GetComponentInChildren<UnityEngine.UI.Text>();
+        label.text = text;
+
+        if (action != null)
+        {
+            var buttonScript = button.GetComponent<UnityEngine.UI.Button>();
+            buttonScript.onClick.AddListener(action);
+        }
+    }
 	
-	private void changeButton(GameObject button, string text, string actionName = null)
-	{
-		UILabel label = button.GetComponentInChildren(typeof(UILabel)) as UILabel;
-		label.text = text;
-		
-		if (actionName != null)
-		{
-			UIButtonMessage buttonMessage = button.GetComponent("UIButtonMessage") as UIButtonMessage;
-			buttonMessage.functionName = actionName;
-		}
-	}
-	
-	private void toggleSound()
+	private void setSoundFromToggle()
 	{
 		bool isSoundOn = Globals.IsSoundOn;
 				
 		//toggle thruster sounds
-		var buttonsWithSound = nguiControls.transform.GetComponentsInChildren<UIButtonSound>();
-		foreach (UIButtonSound buttonSound in buttonsWithSound) {
-			buttonSound.enabled = isSoundOn;
-		}
+        // TODO: replace NGUI code below with Unity4.6 code
+        //var buttonsWithSound = nguiControls.transform.GetComponentsInChildren<UIButtonSound>();
+        //foreach (UIButtonSound buttonSound in buttonsWithSound) {
+        //    buttonSound.enabled = isSoundOn;
+        //}
 		
 		//toggle explosion sounds
 //		var explosions = Globals.PlayerShip.GetComponent<PlayerKeyboard>().shipExplosions;
@@ -257,18 +271,16 @@ public class GuiInGame : MonoBehaviour
 	{
 		//Debug.Log(toPercent + " of " + fuelGaugeMaxWidth + " in " + FuelGauge.foreground.localScale.ToString());
 		
-		//Update FuelGauge width
-		FuelGauge.foreground.localScale = new Vector3(
-			fuelGaugeMaxWidth * toPercent,
-			FuelGauge.foreground.localScale.y,
-			FuelGauge.foreground.localScale.z);
+        //Update FuelGauge width
+        FuelGauge.value = toPercent;
 		
-		//Update FuelGauge color
-		UISprite sliderSprite = FuelGauge.foreground.GetComponent<UISprite>();		
-		if (sliderSprite != null)
-		{
-			sliderSprite.color = Color.Lerp(Color.red, Color.green, toPercent);
-		}
+        //Update FuelGauge color
+        var fill = FuelGauge.GetComponentsInChildren<UnityEngine.UI.Image>()
+            .FirstOrDefault(t => t.name == "Fill");
+        if (fill != null)
+        {
+            fill.color = Color.Lerp(Color.red, Color.green, toPercent);
+        }
 	}
 	
 	private void resetFuelMeter()
