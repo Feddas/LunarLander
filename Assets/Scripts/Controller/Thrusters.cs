@@ -86,7 +86,7 @@ public class Thrusters
                 ThrusterBottom.Emit(1);
                 ThrusterLeft.Emit(0);
                 ThrusterRight.Emit(0);
-                return new Vector3(0, 30, 0);
+                return new Vector3(0, bottomThrust, 0);
             case PlayerMoveEnum.RightBottomThruster:
                 ThrusterBottom.Emit(1);
                 ThrusterLeft.Emit(0);

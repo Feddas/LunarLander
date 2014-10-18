@@ -13,6 +13,11 @@ using System;
 //[ExecuteInEditMode]
 public class GuiMainMenu : MonoBehaviour
 {
+    void Start()
+    {
+        Application.targetFrameRate = 20;
+    }
+
     public void OnClickNewGame()
     {
         PlayerPrefs.DeleteAll();

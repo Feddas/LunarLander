@@ -5,7 +5,7 @@ PlayerSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 3
   AndroidProfiler: 0
-  defaultScreenOrientation: 0
+  defaultScreenOrientation: 4
   targetDevice: 2
   targetGlesGraphics: 1
   targetResolution: 0
@@ -69,7 +69,7 @@ PlayerSettings:
   metroEnableIndependentInputSource: 0
   metroEnableLowLatencyPresentationAPI: 0
   productGUID: b4d24f68580c52040846db21899e1ebe
-  iPhoneBundleVersion: .27
+  iPhoneBundleVersion: .28
   AndroidBundleVersionCode: 1
   AndroidMinSdkVersion: 10
   AndroidPreferredInstallLocation: 1

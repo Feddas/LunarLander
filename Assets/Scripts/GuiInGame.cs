@@ -20,7 +20,6 @@ public class GuiInGame : MonoBehaviour
     public UnityEngine.UI.Slider FuelGauge;
 
     private State game;
-    private float fuelGaugeMaxWidth;
     private const float fuelMax = 400;
 
     private string toggleSoundLabel
@@ -38,8 +37,9 @@ public class GuiInGame : MonoBehaviour
         game.FuelRemainingChanged += HandleFuelRemainingChanged;
 
         //Fuel
-        fuelGaugeMaxWidth = FuelGauge.value;
         resetFuelMeter();
+
+        Application.targetFrameRate = 20;
     }
 
     void HandleGameModeChanged(object sender, EventArgs<Mode> e)
