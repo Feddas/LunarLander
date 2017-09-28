@@ -63,9 +63,9 @@ public class DetonatorBurstEmitter : DetonatorComponent
 	
     public void Awake()
     {
-        _particleEmitter = (gameObject.AddComponent("EllipsoidParticleEmitter")) as ParticleEmitter;
-        _particleRenderer = (gameObject.AddComponent("ParticleRenderer")) as ParticleRenderer;
-        _particleAnimator = (gameObject.AddComponent("ParticleAnimator")) as ParticleAnimator;
+        _particleEmitter = (gameObject.AddComponent<EllipsoidParticleEmitter>());
+        _particleRenderer = (gameObject.AddComponent<ParticleRenderer>());
+        _particleAnimator = (gameObject.AddComponent<ParticleAnimator>());
 
 		_particleEmitter.hideFlags = HideFlags.HideAndDontSave;
 		_particleRenderer.hideFlags = HideFlags.HideAndDontSave;

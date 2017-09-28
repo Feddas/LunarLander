@@ -59,7 +59,7 @@ public class DetonatorSpray : DetonatorComponent {
 				_tmpScale = _tmpScale * size;
 
 				chunk.transform.localScale = new Vector3(_tmpScale,_tmpScale,_tmpScale);
-				chunk.rigidbody.velocity = Vector3.Scale(randVec.normalized,velocityVec);
+				chunk.GetComponent<Rigidbody>().velocity = Vector3.Scale(randVec.normalized,velocityVec);
 				Destroy(chunk, (duration * timeScale)); 
 
 				_delayedExplosionStarted = false;

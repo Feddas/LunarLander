@@ -36,7 +36,7 @@ public class DetonatorGlow : DetonatorComponent
     public void BuildGlow()
     {
 		_glow = new GameObject("Glow");
-		_glowEmitter = (DetonatorBurstEmitter)_glow.AddComponent("DetonatorBurstEmitter");
+		_glowEmitter = (DetonatorBurstEmitter)_glow.AddComponent<DetonatorBurstEmitter>();
 		_glow.transform.parent = this.transform;
 		_glow.transform.localPosition = localPosition;
 		_glowEmitter.material = glowMaterial;

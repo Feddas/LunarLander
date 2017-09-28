@@ -33,12 +33,12 @@ public class LandingPad : MonoBehaviour
     public void Activate()
     {
         if (Globals.IsSoundOn)
-            audio.Play();
+            GetComponent<AudioSource>().Play();
 
         if (stationLight.color != onColor)
         {
             Debug.Log(gameObject.name + " has been activated");
-            renderer.material = onMaterial;
+            GetComponent<Renderer>().material = onMaterial;
             stationLight.color = onColor;
 
             shipScriptInstance.LandingPadActivated();

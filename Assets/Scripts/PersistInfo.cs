@@ -29,7 +29,7 @@ public class PersistInfo : MonoBehaviour
 
     void Update()
     {
-        if (audio.isPlaying == false && Globals.IsSoundOn)
+        if (GetComponent<AudioSource>().isPlaying == false && Globals.IsSoundOn)
         {
             playNextMusicTrack();
         }
@@ -54,7 +54,7 @@ public class PersistInfo : MonoBehaviour
         }
 
         //play it
-        audio.clip = this.MusicTracks[this.currentTrack];
-        audio.Play();
+        GetComponent<AudioSource>().clip = this.MusicTracks[this.currentTrack];
+        GetComponent<AudioSource>().Play();
     }
 }

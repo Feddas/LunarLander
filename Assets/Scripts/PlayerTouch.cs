@@ -94,7 +94,7 @@ public class PlayerTouch : MonoBehaviour
                 && mListener != null && mListener.enabled && mListener.gameObject.activeInHierarchy)
             {
                 PlayerTouch.timeLastClipEnds = System.DateTime.Now.AddSeconds(clip.length);
-                AudioSource source = mListener.audio;
+                AudioSource source = mListener.GetComponent<AudioSource>();
                 if (source == null) source = mListener.gameObject.AddComponent<AudioSource>();
                 source.pitch = pitch;
                 source.PlayOneShot(clip, volume);

@@ -48,7 +48,7 @@ public class Painting : MonoBehaviour
             }
 
 
-            particles.renderer.material = Brushes[chosenBrush];
+            particles.GetComponent<Renderer>().material = Brushes[chosenBrush];
         }
         particles.Play();
         setColors();

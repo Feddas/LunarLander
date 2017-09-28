@@ -14,10 +14,10 @@ private var spawnTime : float;
 private var isReallyOn : boolean;
 function Start ()
 {
-	isReallyOn = this.particleEmitter.emit;
+	isReallyOn = this.GetComponent.<ParticleEmitter>().emit;
 	
 	//this kind of emitter should always start off
-	this.particleEmitter.emit = false;
+	this.GetComponent.<ParticleEmitter>().emit = false;
 	
 	spawnTime = Time.time;
 	
@@ -28,11 +28,11 @@ function Start ()
 	//assign a random material
 	if (Random.value > 0.5)
 	{
-		this.renderer.material = firstMaterial;
+		this.GetComponent.<Renderer>().material = firstMaterial;
 	}
 	else
 	{
-		this.renderer.material = secondMaterial;
+		this.GetComponent.<Renderer>().material = secondMaterial;
 	}
 }
 
@@ -41,11 +41,11 @@ function FixedUpdate ()
 	//is the start time passed? turn emit on
 	if (Time.time > startTime)
 	{
-		this.particleEmitter.emit = isReallyOn;
+		this.GetComponent.<ParticleEmitter>().emit = isReallyOn;
 	}
 	
 	if (Time.time > stopTime)
 	{
-		this.particleEmitter.emit = false;
+		this.GetComponent.<ParticleEmitter>().emit = false;
 	}
 }
