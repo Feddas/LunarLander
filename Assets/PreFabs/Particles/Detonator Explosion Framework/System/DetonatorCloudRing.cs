@@ -36,7 +36,7 @@ public class DetonatorCloudRing : DetonatorComponent
     public void BuildCloudRing()
     {
 		_cloudRing = new GameObject("CloudRing");
-		_cloudRingEmitter = (DetonatorBurstEmitter)_cloudRing.AddComponent("DetonatorBurstEmitter");
+		_cloudRingEmitter = (DetonatorBurstEmitter)_cloudRing.AddComponent<DetonatorBurstEmitter>();
 		_cloudRing.transform.parent = this.transform;
 		_cloudRing.transform.localPosition = localPosition;
 		_cloudRingEmitter.material = cloudRingMaterial;

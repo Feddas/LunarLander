@@ -19,7 +19,7 @@ public class DetonatorSound : DetonatorComponent {
 	
 	override public void Init()
 	{
-		_soundComponent = (AudioSource)gameObject.AddComponent ("AudioSource");
+		_soundComponent = (AudioSource)gameObject.AddComponent<AudioSource>();
 	}
 
 	void Update()

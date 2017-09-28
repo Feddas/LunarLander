@@ -38,7 +38,7 @@ public class DetonatorSparks : DetonatorComponent
     public void BuildSparks()
     {
 		_sparks = new GameObject("Sparks");
-		_sparksEmitter = (DetonatorBurstEmitter)_sparks.AddComponent("DetonatorBurstEmitter");
+		_sparksEmitter = (DetonatorBurstEmitter)_sparks.AddComponent<DetonatorBurstEmitter>();
 		_sparks.transform.parent = this.transform;
 		_sparks.transform.localPosition = localPosition;
 		_sparks.transform.localRotation = Quaternion.identity;

@@ -151,8 +151,8 @@ public class GuiInGame : MonoBehaviour
     {
         if (Globals.IsSoundOn)
         {
-            audio.clip = WinClip;
-            audio.Play();
+            GetComponent<AudioSource>().clip = WinClip;
+            GetComponent<AudioSource>().Play();
         }
         Time.timeScale = 0;
         game.CurrentMode = Mode.Win;
@@ -181,8 +181,8 @@ public class GuiInGame : MonoBehaviour
         {
             if (Globals.IsSoundOn)
             {
-                audio.clip = LoseClip;
-                audio.Play();
+                GetComponent<AudioSource>().clip = LoseClip;
+                GetComponent<AudioSource>().Play();
             }
             Time.timeScale = 0;
             game.CurrentMode = Mode.Lose;

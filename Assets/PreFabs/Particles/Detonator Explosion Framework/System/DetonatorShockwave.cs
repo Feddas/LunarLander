@@ -37,7 +37,7 @@ public class DetonatorShockwave : DetonatorComponent
     public void BuildShockwave()
     {
 		_shockwave = new GameObject("Shockwave");
-		_shockwaveEmitter = (DetonatorBurstEmitter)_shockwave.AddComponent("DetonatorBurstEmitter");
+		_shockwaveEmitter = (DetonatorBurstEmitter)_shockwave.AddComponent<DetonatorBurstEmitter>();
 		_shockwave.transform.parent = this.transform;
 		_shockwave.transform.localRotation = Quaternion.identity;
 		_shockwave.transform.localPosition = localPosition;

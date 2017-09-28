@@ -31,7 +31,7 @@ public class PlayerShip : MonoBehaviour
         Globals.BottomThruster = bottomThruster;
         Globals.LeftThruster = leftThruster;
         Globals.RightThruster = rightThruster;
-        Globals.PlayerShip = rigidbody;
+        Globals.PlayerShip = GetComponent<Rigidbody>();
     }
 
     // Use this for initialization
@@ -56,14 +56,14 @@ public class PlayerShip : MonoBehaviour
         bool keyboardThrustersOn = PlayerKeyboard.IsKeyboardThrustersOn;
         if (keyboardThrustersOn && Thrusters.HaveFuel)
         {
-            if (audio.isPlaying == false)
+            if (GetComponent<AudioSource>().isPlaying == false)
             {
-                audio.Play();
+                GetComponent<AudioSource>().Play();
             }
         }
-        else if (audio.isPlaying)
+        else if (GetComponent<AudioSource>().isPlaying)
         {
-            audio.Stop();
+            GetComponent<AudioSource>().Stop();
         }
     }
 
